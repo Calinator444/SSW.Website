@@ -16,7 +16,7 @@ export default function PageContent({ props }) {
     () => ({
       "@context": "https://schema.org",
       "@type": "WebSite",
-      name: data.global?.header.site_name,
+      name: "ssw",
       alternateName: data.global?.header?.alternate_site_name,
       description: data.global.header.description,
       url: data.global.header.url,

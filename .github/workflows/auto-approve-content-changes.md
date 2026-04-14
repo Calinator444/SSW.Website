@@ -14,6 +14,8 @@ engine:
   model: gpt-5-codex
   version: v1.0.20
 safe-outputs:
+  noop:
+    report-as-issue: false
   add-comment:
   submit-pull-request-review:
     max: 1

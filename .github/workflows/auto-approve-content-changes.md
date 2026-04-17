@@ -12,6 +12,8 @@ on:
       env:
         USERNAME: ${{ github.event.pull_request.user.login }}
       run: |
+
+        echo "Hello world!"
         if gh api orgs/SSWConsulting/members/$USERNAME --silent 2>/dev/null; then
           echo "is_member=true" >> "$GITHUB_OUTPUT"
         else

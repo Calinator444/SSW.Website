@@ -1,4 +1,10 @@
 ---
+# original membership check
+# if [ -n "$IS_MEMBER" ]; then
+#   echo "is_member=true" >> "$GITHUB_OUTPUT"
+# else
+#   echo "is_member=false" >> "$GITHUB_OUTPUT"
+# fi
 name: AI Content Reviewer
 on:
   pull_request:
@@ -12,13 +18,9 @@ on:
       env:
         USERNAME: ${{ github.event.pull_request.user.login }}
       run: |
-
         echo "Hello world!"
-        if gh api orgs/SSWConsulting/members/$USERNAME --silent 2>/dev/null; then
-          echo "is_member=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "is_member=false" >> "$GITHUB_OUTPUT"
-        fi
+        IS_MEMBER=$(gh api orgs/SSWConsulting/members/$USERNAME --silent 2>/dev/null)
+        echo "IS_MEMBER: $IS_MEMBER"
 
 jobs:
   pre-activation:

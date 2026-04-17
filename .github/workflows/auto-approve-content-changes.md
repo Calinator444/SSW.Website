@@ -15,12 +15,23 @@ on:
   steps:
     - name: Check org membership
       id: org_check
-      env:
-        USERNAME: ${{ github.event.pull_request.user.login }}
-      run: |
-        echo "Hello world!"
-        IS_MEMBER=$(gh api orgs/SSWConsulting/members/$USERNAME --silent 2>/dev/null)
-        echo "IS_MEMBER: $IS_MEMBER"
+      uses: actions/github-script@v8
+      with:
+        script: |
+          const username = context.payload.pull_request.user.login;
+          console.log(`Checking org membership for: ${username}`);
+          try {
+            const response = await github.rest.orgs.checkMembershipForUser({
+              org: 'SSWConsulting',
+              username,
+            });
+            console.log(`API Response Status: ${response.status}`);
+            core.setOutput('is_member', 'true');
+          } catch (error) {
+            console.log(`API Response Status: ${error.status}`);
+            console.log(`Error message: ${error.message}`);
+            core.setOutput('is_member', 'false');
+          }
 
 jobs:
   pre-activation:

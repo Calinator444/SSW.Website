@@ -6,7 +6,26 @@ on:
     paths:
       - "content/**"
       - "public/**"
-if: github.event.pull_request.user.login == 'tina-cloud-app[bot]'
+  steps:
+    - name: Check org membership
+      id: org_check
+      env:
+        USERNAME: ${{ github.event.pull_request.user.login }}
+      run: |
+        if gh api orgs/SSWConsulting/members/$USERNAME --silent 2>/dev/null; then
+          echo "is_member=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "is_member=false" >> "$GITHUB_OUTPUT"
+        fi
+
+jobs:
+  pre-activation:
+    outputs:
+      is_member: ${{ steps.org_check.outputs.is_member }}
+
+if: >
+  github.event.pull_request.user.login == 'tina-cloud-app[bot]' ||
+  needs.pre_activation.outputs.is_member == 'true'
 permissions:
   contents: read
   pull-requests: read
